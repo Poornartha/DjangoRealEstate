@@ -1,0 +1,2 @@
+1.  python manage.py collectstatic -> Making a common static folder
+2.  
