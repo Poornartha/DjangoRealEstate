@@ -1,12 +1,69 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Listing
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .choices import price_choices, bedroom_choices, state_choices
 
 # Create your views here.
 def index(request):
-    return render (request,  'listings/listings.html')
 
-def listings(request):
-    return render (request,  'listings/listing.html')
+    listings = Listing.objects.order_by('-list_date').filter(is_published=True)
+
+    paginator = Paginator(listings, 6)
+    page = request.GET.get('page')
+    paged_listings = paginator.get_page(page)
+
+    context = {
+        'listings': paged_listings,
+    }
+
+    return render (request,  'listings/listings.html', context)
+
+def listings(request, listing_id):
+    
+    listing = get_object_or_404(Listing, pk=listing_id)
+
+    context = {
+        'listing': listing,
+    }
+
+    return render (request,  'listings/listing.html', context)
 
 
 def search(request):
-    return render (request,  'listings/search.html')
+
+    queryset_list = Listing.objects.order_by('-list_date')
+
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords']
+        if keywords: 
+            queryset_list = queryset_list.filter(description__icontains=keywords)
+
+    if 'city' in request.GET:
+        city = request.GET['city']
+        if city: 
+            queryset_list = queryset_list.filter(city__icontains=city)
+    
+    if 'state' in request.GET:
+        state = request.GET['state']
+        if state: 
+            queryset_list = queryset_list.filter(state__icontains=state)
+    
+    if 'bedrooms' in request.GET:
+        bedrooms = request.GET['bedrooms']
+        if bedrooms: 
+            queryset_list = queryset_list.filter(bedrooms=bedrooms)
+
+    if 'price' in request.GET:
+        max_price = request.GET['price']
+        if max_price: 
+            queryset_list = queryset_list.filter(price__lte=max_price)
+    
+    context = {
+        'state_choices': state_choices,
+        'bedroom_coices': bedroom_choices,
+        'price_choices': price_choices,
+        'listings': queryset_list,
+        'values': request.GET,
+    }
+
+    return render (request, 'listings/search.html', context)

@@ -1,0 +1,46 @@
+MODEL / DB Fields:
+
+# Listings
+1. id: INT
+2. realtor: INT (FOREIGN KEY)
+3. title: STR
+4. address: STR
+5. state: STR
+6. zipcode: STR
+7. description: TEXT
+8. price: INT
+9. bedrooms: INT
+10. bathrooms: INT
+11. garage: INT [0]
+12. sqft: INT
+13. lot_size: FLOAT
+14. list_date: DATE
+15. photo_main: STR
+16. photo_1: STR
+17. photo_2: STR
+18. photo_3: STR
+19. photo_4: STR
+20. photo_5: STR
+21. photo_6: STR
+22. is_published: BOOL [true]
+
+# Realtors
+id: INT
+name: STR
+photo: STR
+description: TEXT
+email: STR
+phone: STR
+is_mvp: BOOL [0]
+hire_date: DATE
+
+# Contact
+id: INT
+user_id: INT
+listing: INT
+listing_id: INT
+name: STR
+email: STR
+phone: STR
+message: TEXT
+contact_date: DATE
