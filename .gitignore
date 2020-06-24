@@ -148,3 +148,4 @@ dmypy.json
 
 /static
 /media
+.vscode
